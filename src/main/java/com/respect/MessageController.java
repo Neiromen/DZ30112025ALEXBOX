@@ -9,27 +9,42 @@ import java.util.List;
 @RestController
 public class MessageController {
     private final List<String> messages = new ArrayList<>();
-    @GetMapping("messages")
+
+    //curl --location 'localhost:8081/messages'
+    @GetMapping("/messages")
     public ResponseEntity<List<String>> getMessages() {
         return ResponseEntity.ok(messages);
     }
-    @PostMapping("messages")
+
+//    curl --location 'localhost:8081/messages' \
+//            --header 'Content-Type: application/json' \
+//            --data 'Skipov'
+    @PostMapping("/messages")
     public ResponseEntity<Void> addMessage(@RequestBody String text) {
         messages.add(text);
         return ResponseEntity.accepted().build();
     }
-    @GetMapping("messages/{index}")
+
+    //curl --location 'localhost:8081/messages/0' \
+    //--data ''
+    @GetMapping("/messages/{index}")
     public ResponseEntity<String> getMessage(@PathVariable("index") Integer
                                                      index) {
         return ResponseEntity.ok(messages.get(index));
     }
-    @DeleteMapping("messages/{index}")
+
+    //curl --location --request DELETE 'localhost:8081/messages/0'
+    @DeleteMapping("/messages/{index}")
     public ResponseEntity<Void> deleteText(@PathVariable("index") Integer
                                                    index) {
         messages.remove((int) index);
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("messages/{index}")
+
+    //curl --location --request PUT 'localhost:8081/messages/0' \
+    //--header 'Content-Type: application/json' \
+    //--data 'Skipov2'
+    @PutMapping("/messages/{index}")
     public ResponseEntity<Void> updateMessage(
             @PathVariable("index") Integer i,
             @RequestBody String message) {
