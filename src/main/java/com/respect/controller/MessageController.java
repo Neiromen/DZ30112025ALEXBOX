@@ -1,4 +1,4 @@
-package com.respect;
+package com.respect.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
