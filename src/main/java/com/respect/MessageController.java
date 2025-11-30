@@ -11,14 +11,20 @@ public class MessageController {
     private final List<String> messages = new ArrayList<>();
 
     //curl --location 'localhost:8081/messages'
-    @GetMapping("/messages")
-    public ResponseEntity<List<String>> getMessages() {
-        return ResponseEntity.ok(messages);
+    @GetMapping("/messages/findBySubstring/{substring}")
+    public ResponseEntity<List<String>> getMessages(@PathVariable String substring) {
+        List<String> containsStrings = new ArrayList<>();
+        for (String s : messages) {
+            if (s.contains(substring)) {
+                containsStrings.add(s);
+            }
+        }
+        return ResponseEntity.ok(containsStrings);
     }
 
-//    curl --location 'localhost:8081/messages' \
-//            --header 'Content-Type: application/json' \
-//            --data 'Skipov'
+    //    curl --location 'localhost:8081/messages' \
+    //    --header 'Content-Type: application/json' \
+    //    --data 'Skipov'
     @PostMapping("/messages")
     public ResponseEntity<Void> addMessage(@RequestBody String text) {
         messages.add(text);
@@ -52,4 +58,40 @@ public class MessageController {
         messages.add(i, message);
         return ResponseEntity.accepted().build();
     }
+
+    @GetMapping("/messages/search/{text}")
+    public ResponseEntity<Integer> getFirstFindNeededTextIndex(@PathVariable String text) {
+        int foundedIndex = 0;
+        for (String s : messages) {
+            if (s.equals(text)) {
+                return ResponseEntity.ok(foundedIndex);
+            }
+            foundedIndex++;
+        }
+        return ResponseEntity.ok(-1);
+    }
+
+    @GetMapping("/messages/count")
+    public ResponseEntity<Integer> countMessages() {
+        return ResponseEntity.ok(messages.size());
+    }
+
+    @PostMapping("/messages/{index}/create")
+    public ResponseEntity<Void> createMessageWithIndex(@PathVariable int index, @RequestBody String text) {
+        messages.add(index, text);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/messages/search/{text}")
+    public ResponseEntity<Void> deleteWhereTextIsSubstring(@PathVariable String text) {
+        int i = 0;
+        for (String s : messages) {
+            if (s.contains(text)) {
+               messages.remove(i);
+            }
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
