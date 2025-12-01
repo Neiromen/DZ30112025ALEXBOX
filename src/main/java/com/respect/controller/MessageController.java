@@ -10,7 +10,7 @@ import java.util.List;
 public class MessageController {
     private final List<String> messages = new ArrayList<>();
 
-    //curl --location 'localhost:8081/messages'
+    //curl --location 'localhost:8081/messages/findByString/Skipov'
     @GetMapping("/messages/findBySubstring/{substring}")
     public ResponseEntity<List<String>> getMessages(@PathVariable String substring) {
         List<String> containsStrings = new ArrayList<>();
